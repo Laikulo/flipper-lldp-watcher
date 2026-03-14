@@ -1,0 +1,10 @@
+App(
+  appid="gpio_lldp",
+  name="LLDP Decoder",
+  apptype=FlipperAppType.GPIO,
+  entry_point="gpio_lldp_app",
+  stack_size=1*1024,
+  requires=[ "gui" ],
+  order=10
+)
+

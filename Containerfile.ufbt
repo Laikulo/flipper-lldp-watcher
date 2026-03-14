@@ -1,0 +1,13 @@
+FROM debian:trixie-slim
+RUN useradd -m build
+RUN \
+	apt-get update && \
+	apt-get -y upgrade && \
+	apt-get -y install pipx curl && \
+	apt-get clean
+USER build
+WORKDIR /home/build
+ENV PATH=$PATH:/home/build/.local/bin
+RUN pipx install ufbt
+# We do this to get it to DL the toolchain and all that
+RUN ufbt -s env
