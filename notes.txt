@@ -1,0 +1,9 @@
+Plan to use a W5500 in macraw mode.
+
+SPI on bus #? (prefer to use the same pinout as the exiting ethernet module
+
+Start phases:
+
+Runtime ops:
+
+Teardown:
