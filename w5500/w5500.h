@@ -32,10 +32,11 @@
 
 // LUT for socket selection
 const uint8_t W5500_SOCKETS[] = {
-  W5500_BSB_SOCKET0, W5500_BSB_SOCKET1, W5500_BSB_SOCKET2, W5500_BSB_SOCKET3,
-  W5500_BSB_SOCKET4, W5500_BSB_SOCKET5, W5500_BSB_SOCKET6,
-  W5500_BSB_SOCKET7
-};
+    W5500_BSB_SOCKET0, W5500_BSB_SOCKET1, W5500_BSB_SOCKET2, W5500_BSB_SOCKET3,
+    W5500_BSB_SOCKET4, W5500_BSB_SOCKET5, W5500_BSB_SOCKET6, W5500_BSB_SOCKET7};
+
+typedef uint8_t W5500IpAddr[4];
+typedef uint8_t W5500MacAddr[6];
 
 // Common registers
 
@@ -45,6 +46,20 @@ const uint8_t W5500_SOCKETS[] = {
 #define W5500_MR_PB 0x10  // Ping Block: if 1, do not respond to pings
 #define W5500_MR_WOL 0x20 // WOL: if 1, raise interupt on magic packet
 #define W5500_MR_RST 0x80 // Soft reset
+
+typedef union W5500RegMr {
+  struct __attribute__((packed)) {
+    uint8_t _reserved_0 : 1;
+    uint8_t FARP : 1;
+    uint8_t _reserved_2 : 1;
+    uint8_t PPPOE : 1;
+    uint8_t PB : 1;
+    uint8_t WOL : 1;
+    uint8_t _reserved_6 : 1;
+    uint8_t RST : 1;
+  } bits;
+  uint8_t value;
+} W5500RegMr;
 
 #define W5500_COMMON_GWR 0x0001  // Gateway IP Addr
 #define W5500_COMMON_SUBR 0x0005 // Subnet Mask
@@ -60,8 +75,23 @@ const uint8_t W5500_SOCKETS[] = {
   0x40 // ICMP Port unreachable: See UIPR and UPORTR for what
 #define W5500_IR_CONFLICT 0x80 // IP Address conflict
 
+typedef union W5500Interupts {
+  struct __attribute__((packed)) {
+    uint8_t _reserved_0 : 4;
+    uint8_t MP : 1;
+    uint8_t PPPOE : 1;
+    uint8_t UNREACH : 1;
+    uint8_t CONFLICT : 1;
+  } bits;
+  uint8_t value;
+} W5500Interupts;
+
+typedef W5500Interupts W5500RegIr;
+
 #define W5500_COMMON_IMR 0x0016 // Interupt Mask register
 // Uses the same values as IR
+
+typedef W5500Interupts W5500RegImr;
 
 #define W5500_COMMON_SIR 0x0017  // Socket Interupt [flag] register
 #define W5500_COMMON_SIMR 0x0018 // Socket Interupt Mask register
@@ -92,10 +122,34 @@ const uint8_t W5500_SOCKETS[] = {
 #define W5500_PHYCFGR_OPMDC_100FULL 0b00011000
 #define W5500_PHYCFGR_OPMDC_100AUTO 0b00100000
 
+/*
+typedef enum {
+  10HALF = W5500_PHYCFGR_OPMDC_10HALF,
+  10FULL = W5500_PHYCFGR_OPMDC_10FULL,
+  100HALF = W5500_PHYCFGR_OPMDC_100HALF,
+  100FULL = W5500_PHYCFGR_OPMDC_100FULL,
+  100AUTO = W5500_PHYCFGR_OPMDC_100AUTO,
+  DOWN = W5500_PHYCFGR_OPMDC_DOWN,
+  AUTO = W5500_PHYCFGR_OPMDC_AUTO
+} W5500OperatingMode;
+*/
+
 #define W5500_PHYCFGR_OPMD                                                     \
   0x40 // If 1, configure mode with OPMDC, if 0, pin strap
 #define W5500_PHYCFGR_RST                                                      \
   0x80 // Reset the PHY. 0 causes reset, reads back as 1 after reset
+
+typedef union {
+  struct __attribute__((packed)) {
+    uint8_t LNK : 1;
+    uint8_t SPD : 1;
+    uint8_t DPX : 1;
+    uint8_t OPMDC : 3;
+    uint8_t OPMD : 1;
+    uint8_t RST : 1;
+  } bits;
+  uint8_t value;
+} W5500RegPhyCfg;
 
 #define W5500_COMMON_VERSIONR                                                  \
   0x0039 // Version register. DS states should always be 0x04
