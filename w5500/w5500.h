@@ -31,11 +31,11 @@
 #define W5500_OM_FIXED_4_BYTE 0b11
 
 // LUT for socket selection
-const uint8_t W5500_SOCKETS[] = [
+const uint8_t W5500_SOCKETS[] = {
   W5500_BSB_SOCKET0, W5500_BSB_SOCKET1, W5500_BSB_SOCKET2, W5500_BSB_SOCKET3,
   W5500_BSB_SOCKET4, W5500_BSB_SOCKET5, W5500_BSB_SOCKET6,
   W5500_BSB_SOCKET7
-]
+};
 
 // Common registers
 
@@ -75,8 +75,8 @@ const uint8_t W5500_SOCKETS[] = [
 #define W5500_COMMON_PSID 0x0024   // PPPoE Session ID
 #define W5500_COMMON_PMRU 0x0026   // PPPoE MRU
 
-#define W5500_COMMON_UIPR 0x0028 // Unreachable address
-#define W5500_COMMON_UIPR 0x002C // Unreachable port
+#define W5500_COMMON_UIPR 0x0028   // Unreachable address
+#define W5500_COMMON_UPORTR 0x002C // Unreachable port
 
 #define W5500_COMMON_PHYCFGR 0x002E // PHY Configuration
 #define W5500_PHYCFGR_LNK 0x01      // Link Status (up/down)

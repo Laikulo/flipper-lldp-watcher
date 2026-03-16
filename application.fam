@@ -2,7 +2,7 @@ App(
   appid="lldp_watcher",
   name="LLDP Decoder",
   apptype=FlipperAppType.EXTERNAL,
-  entry_point="lldp_watcher_app",
+  entry_point="lldp_watcher_main",
   stack_size=1*1024,
   requires=[ "gui" ],
   order=10

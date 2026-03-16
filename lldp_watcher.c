@@ -11,7 +11,7 @@ typedef struct {
 
 static void lldp_watcher_cb_input(InputEvent *evt, void *ctx) {
   LLDPWatcherContext *c = ctx;
-  furi_message_queue_put(c->event_queue, event, FuriWaitForever);
+  furi_message_queue_put(c->event_queue, evt, FuriWaitForever);
 }
 
 static LLDPWatcherContext *lldp_watcher_context_alloc(void) {
@@ -26,7 +26,7 @@ static LLDPWatcherContext *lldp_watcher_context_alloc(void) {
 
   ctx->event_queue = furi_message_queue_alloc(8, sizeof(InputEvent));
 
-  return ctx
+  return ctx;
 }
 
 static void lldp_watcher_context_free(LLDPWatcherContext *ctx) {
@@ -44,12 +44,12 @@ static void lldp_watcher_run(LLDPWatcherContext *ctx) {
   while (is_running) {
     InputEvent evt;
     const FuriStatus status =
-        furi_message_queue_get(ctx->event_queue, &event, FuriWaitForever);
+        furi_message_queue_get(ctx->event_queue, &evt, FuriWaitForever);
 
     if (status != FuriStatusOk) {
       continue;
     }
-    if (evt.key == InputKeyBack &&evt.type = InputTypeShort) {
+    if (evt.key == InputKeyBack && evt.type == InputTypeShort) {
       is_running = true;
     }
   }
@@ -58,6 +58,8 @@ static void lldp_watcher_run(LLDPWatcherContext *ctx) {
 int32_t lldp_watcher_main(void *p) {
   UNUSED(p);
   LLDPWatcherContext *ctx = lldp_watcher_context_alloc();
+
+  lldp_watcher_run(ctx);
 
   lldp_watcher_context_free(ctx);
   return 0;
